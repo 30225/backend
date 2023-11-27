@@ -84,6 +84,20 @@ class Gateway:
                     return {"access_token": user["username"], "token_type": "bearer"}
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
+        # Login endpoint
+        @app.post("/login", response_model=User)
+        def login(form_data: UserCreate):
+            with open(USERS_DB_PATH, "r") as file:
+                users = json.load(file)
+
+            # Hash the provided password for comparison
+            hashed_password = hashlib.sha256(form_data.password.encode()).hexdigest()
+
+            for user in users:
+                if user["username"] == form_data.username and user["password"] == hashed_password:
+                    return user
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+
 
         # Protected route that requires authentication
         @app.get("/protected", response_model=User)
