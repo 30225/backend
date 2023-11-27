@@ -71,9 +71,9 @@ class Gateway:
             return [item for item in user_cart if item is not None]
 
         @app.put("/cart", response_model=List[dict])
-        async def add_to_cart(cart_request: CartRequest, item_id: int):
-            username = cart_request.username
-
+        async def add_to_cart(cart_request: dict):
+            username = cart_request['username']
+            item_id = cart_request['item_id']
             # Read cart data from the JSON file
             cart_data = read_cart_data()
 
