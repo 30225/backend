@@ -11,6 +11,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 USERS_DB_PATH = 'temp_db/users.json'
 
+def read_cart_data():
+    # Read cart data from the JSON file
+    with open("temp_db/cart.json", "r") as file:
+        return json.load(file)
+
+def save_cart_data(cart_data):
+    # Save cart data to the JSON file
+    with open("temp_db/cart.json", "w") as file:
+        json.dump(cart_data, file)
+
 # User model for registration
 class UserCreate(BaseModel):
     username: str
@@ -20,6 +30,9 @@ class UserCreate(BaseModel):
 # User model for authentication
 class User(BaseModel):
     username: str
+
+class CartRequest(BaseModel):
+username: str
 
 class Gateway:
     """A class that manages APIs.
@@ -39,6 +52,45 @@ class Gateway:
         """Creates an API.
         param app: A FastAPI app.
         """
+
+
+        @app.post("/cart", response_model=List[dict])
+        async def get_cart(cart_request: CartRequest):
+            username = cart_request.username
+
+            # Read cart data from the JSON file
+            cart_data = read_cart_data()
+
+            user_item_ids = cart_data.get(username, [])
+
+            if not user_item_ids:
+                raise HTTPException(status_code=404, detail="User not found or cart is empty.")
+
+            user_cart = [item_data.get(item_id) for item_id in user_item_ids]
+
+            return [item for item in user_cart if item is not None]
+
+        @app.put("/cart", response_model=List[dict])
+        async def add_to_cart(cart_request: CartRequest, item_id: int):
+            username = cart_request.username
+
+            # Read cart data from the JSON file
+            cart_data = read_cart_data()
+
+            # Retrieve the user's existing item IDs or create an empty list if it doesn't exist
+            user_item_ids = cart_data.setdefault(username, [])
+
+            # Add the new item ID to the user's cart
+            user_item_ids.append(item_id)
+
+            # Save the updated cart data to the JSON file
+            save_cart_data(cart_data)
+
+            # Return the updated cart
+            user_cart = [item_data.get(item_id) for item_id in user_item_ids]
+
+            return [item for item in user_cart if item is not None]
+        
 
         # Route for user registration
         @app.post("/register", response_model=User)
