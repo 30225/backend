@@ -1,3 +1,25 @@
+from auth.py import get_current_user
+from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List, Optional
+import json
+import hashlib
+
+USERS_DB_PATH = 'temp_db/users.json'
+
+# User model for registration
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+
+
+# User model for authentication
+class User(BaseModel):
+    username: str
+    email: str
+
 class Gateway:
     """A class that manages APIs.
 
@@ -16,6 +38,55 @@ class Gateway:
         """Creates an API.
         param app: A FastAPI app.
         """
+
+        # Route for user registration
+        @app.post("/register", response_model=User)
+        def register_user(user: UserCreate):
+            # In a real-world scenario, you would hash and salt the password before storing it.
+            with open(USERS_DB_PATH, "r") as file:
+                users = json.load(file)
+
+            # Check if the username already exists
+            if any(u["username"] == user.username for u in users):
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Username already registered")
+
+            # Hash the password
+            hashed_password = hashlib.sha256(user.password.encode()).hexdigest()
+
+            # Add the new user to the database
+            new_user = {"username": user.username, "password": hashed_password}
+            users.append(new_user)
+
+            # Save the updated user list to the JSON file
+            with open(USERS_DB_PATH, "w") as file:
+                json.dump(users, file, indent=2)
+
+            return user
+
+
+        # Route for token generation (authentication)
+        @app.post("/token")
+        def generate_token(form_data: UserCreate):
+            # In a real-world scenario, you would validate the username and password against a database.
+            # For simplicity, we'll just check if the user is in our JSON file.
+            with open(USERS_DB_PATH, "r") as file:
+                users = json.load(file)
+
+            # Hash the provided password for comparison
+            hashed_password = hashlib.sha256(form_data.password.encode()).hexdigest()
+
+            for user in users:
+                if user["username"] == form_data.username and user["password"] == hashed_password:
+                    return {"access_token": user["username"], "token_type": "bearer"}
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+
+
+        # Protected route that requires authentication
+        @app.get("/protected", response_model=User)
+        def protected_route(current_user: User = Depends(get_current_user)):
+            return current_user
+
+
         @app.get('/products')
         def get_products():
             """Returns a list of products."""
