@@ -20,7 +20,7 @@ class ECommerceCompany:
         app = FastAPI()
         app.add_middleware(
             CORSMiddleware,
-            allow_origins=['*'],
+            allow_origins=['https://angel-fenix-front.onrender.com'],
             allow_credentials=True,
             allow_methods=['*'],
             allow_headers=['*'],
