@@ -14,7 +14,10 @@ USERS_DB_PATH = 'temp_db/users.json'
 def read_cart_data():
     # Read cart data from the JSON file
     with open("temp_db/cart.json", "r") as file:
-        return json.load(file)
+        try:
+            return json.load(file)
+        expect json.JSONDecodeError:
+            return {}
 
 def save_cart_data(cart_data):
     # Save cart data to the JSON file
@@ -61,14 +64,14 @@ class Gateway:
             # Read cart data from the JSON file
             cart_data = read_cart_data()
 
-            user_item_ids = cart_data.get(username, [])
-
-            if not user_item_ids:
+            if username in cart_data:
+                user_item_ids = cart_data[username]
+            else
                 raise HTTPException(status_code=404, detail="User not found or cart is empty.")
 
-            user_cart = [item_data.get(item_id) for item_id in user_item_ids]
+            user_cart = user_item_ids
 
-            return [item for item in user_cart if item is not None]
+            return user_cart
 
         @app.put("/cart", response_model=List[dict])
         async def add_to_cart(cart_request: dict):
@@ -77,17 +80,17 @@ class Gateway:
             # Read cart data from the JSON file
             cart_data = read_cart_data()
 
-            # Retrieve the user's existing item IDs or create an empty list if it doesn't exist
-            user_item_ids = cart_data.setdefault(username, [])
+            if not username in cart_data:
+                cart_data[username] = []
 
-            # Add the new item ID to the user's cart
-            user_item_ids.append(item_id)
+            # Retrieve the user's existing item IDs or create an empty list if it doesn't exist
+            cart_data[username].append(item_id)
 
             # Save the updated cart data to the JSON file
             save_cart_data(cart_data)
 
             # Return the updated cart
-            user_cart = [item_data.get(item_id) for item_id in user_item_ids]
+            user_cart = cart_data[username]
 
             return [item for item in user_cart if item is not None]
         
