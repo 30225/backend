@@ -77,7 +77,7 @@ class Gateway:
 
             return user_cart
 
-        @app.put("/cart")
+        @app.put("/cart", response_model=List[int])
         async def add_to_cart(cart_request: CartUpdate):
             username = cart_request.username
             item_id = cart_request.item_id
