@@ -37,6 +37,10 @@ class User(BaseModel):
 class CartRequest(BaseModel):
     username: str
 
+class CartUpdate(BaseModel):
+    username: str
+    item_id: int
+
 class Gateway:
     """A class that manages APIs.
 
@@ -74,9 +78,9 @@ class Gateway:
             return user_cart
 
         @app.put("/cart", response_model=List[dict])
-        async def add_to_cart(cart_request: dict):
-            username = cart_request['username']
-            item_id = cart_request['item_id']
+        async def add_to_cart(cart_request: CartUpdate):
+            username = cart_request.username
+            item_id = cart_request.item_id
             # Read cart data from the JSON file
             cart_data = read_cart_data()
 
