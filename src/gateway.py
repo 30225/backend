@@ -1,4 +1,4 @@
-from auth.py import get_current_user
+from auth import get_current_user
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
