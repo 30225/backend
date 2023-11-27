@@ -14,7 +14,6 @@ USERS_DB_PATH = 'temp_db/users.json'
 # User model for registration
 class UserCreate(BaseModel):
     username: str
-    email: str
     password: str
 
 
