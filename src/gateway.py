@@ -64,6 +64,7 @@ class Gateway:
             # Save the updated user list to the JSON file
             with open(USERS_DB_PATH, "w") as file:
                 json.dump(users, file, indent=2)
+                file.
 
             return user
 
@@ -88,7 +89,10 @@ class Gateway:
         @app.post("/login", response_model=User)
         def login(form_data: UserCreate):
             with open(USERS_DB_PATH, "r") as file:
-                users = json.load(file)
+                try:
+                    users = json.load(file)
+                except json.JSONDecodeError:
+                    users = []
 
             # Hash the provided password for comparison
             hashed_password = hashlib.sha256(form_data.password.encode()).hexdigest()
