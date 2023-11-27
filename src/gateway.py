@@ -32,7 +32,7 @@ class User(BaseModel):
     username: str
 
 class CartRequest(BaseModel):
-username: str
+    username: str
 
 class Gateway:
     """A class that manages APIs.
