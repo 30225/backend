@@ -96,7 +96,7 @@ class Gateway:
             # Return the updated cart
             user_cart = cart_data[username]
 
-            return [item for item in user_cart if item is not None]
+            return user_cart
         
 
         # Route for user registration
