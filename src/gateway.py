@@ -66,7 +66,7 @@ class Gateway:
 
             if username in cart_data:
                 user_item_ids = cart_data[username]
-            else
+            else:
                 raise HTTPException(status_code=404, detail="User not found or cart is empty.")
 
             user_cart = user_item_ids
