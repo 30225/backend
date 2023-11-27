@@ -16,7 +16,7 @@ def read_cart_data():
     with open("temp_db/cart.json", "r") as file:
         try:
             return json.load(file)
-        expect json.JSONDecodeError:
+        except json.JSONDecodeError:
             return {}
 
 def save_cart_data(cart_data):
