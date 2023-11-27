@@ -21,7 +21,6 @@ class UserCreate(BaseModel):
 # User model for authentication
 class User(BaseModel):
     username: str
-    email: str
 
 class Gateway:
     """A class that manages APIs.
