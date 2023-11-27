@@ -6,6 +6,8 @@ from typing import List, Optional
 import json
 import hashlib
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 USERS_DB_PATH = 'temp_db/users.json'
 
 # User model for registration
