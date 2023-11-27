@@ -97,6 +97,25 @@ class Gateway:
             user_cart = cart_data[username]
 
             return user_cart
+
+        @app.delete("/cart", response_model=List[int])
+        async def remove_from_cart(cart_request: CartUpdate):
+            username = cart_request.username
+            item_id = cart_request.item_id
+
+            cart_data = read_cart_data()
+
+            if not username in cart_data:
+                cart_data[username] = []
+            
+            cart_data[username] = [item for item in cart_data[username] if item != item_id]
+
+            save_cart_data(cart_data)
+
+            user_cart = cart_data[username]
+
+            return user_cart
+            
         
 
         # Route for user registration
