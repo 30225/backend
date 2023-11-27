@@ -45,7 +45,10 @@ class Gateway:
         def register_user(user: UserCreate):
             # In a real-world scenario, you would hash and salt the password before storing it.
             with open(USERS_DB_PATH, "r") as file:
-                users = json.load(file)
+                try:
+                    users = json.load(file)
+                except json.JSONDecodeError:
+                    users = []
 
             # Check if the username already exists
             if any(u["username"] == user.username for u in users):
