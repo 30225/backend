@@ -61,7 +61,7 @@ class Gateway:
         """
 
 
-        @app.post("/cart", response_model=List[dict])
+        @app.post("/cart", response_model=List[int])
         async def get_cart(cart_request: CartRequest):
             username = cart_request.username
 
