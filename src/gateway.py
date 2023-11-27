@@ -64,7 +64,6 @@ class Gateway:
             # Save the updated user list to the JSON file
             with open(USERS_DB_PATH, "w") as file:
                 json.dump(users, file, indent=2)
-                file.
 
             return user
 
