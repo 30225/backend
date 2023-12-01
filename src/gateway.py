@@ -1,5 +1,5 @@
 from auth import get_current_user
-from fastapi import FastAPI, HTTPException, Depends, status, UploadFile
+from fastapi import FastAPI, HTTPException, Depends, status, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import FileResponse
