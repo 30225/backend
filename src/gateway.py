@@ -162,6 +162,18 @@ class Gateway:
                     return {"access_token": user["username"], "token_type": "bearer"}
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
+        @app.post("/auth")
+        def isadmin(user1: dict):
+            with open(USERS_DB_PATH, "r") as file:
+                users = json.load(file)
+            
+            for user in users:
+                if user["username"] == user1["username"]:
+                    if user["admin"] == "true":
+                        reutrn {"admin": "true"}
+            
+            return {"admin": "false"}
+
         # Login endpoint
         @app.post("/login", response_model=User)
         def login(form_data: UserCreate):
