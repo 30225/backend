@@ -222,7 +222,7 @@ class Gateway:
             return product
 
         @app.post('/products')
-        def create_product(product: dict):
+        async def create_product(product: dict):
             """Creates a product."""
             result = await self.inventory.create_product(product)
             return {'message': result}
