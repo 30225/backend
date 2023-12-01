@@ -222,7 +222,20 @@ class Gateway:
             return product
 
         @app.post('/products')
-        async def create_product(product: dict):
+        async def create_product(
+            id: str,
+            name: str,
+            price: float,
+            quantity: int,
+            picture: UploadFile = File(...)
+        ):
+            product = {
+                "id": id,
+                "name": name,
+                "price": price,
+                "quantity": quantity,
+                "picture": picture,
+            }
             """Creates a product."""
             result = await self.inventory.create_product(product)
             return {'message': result}
