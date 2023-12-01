@@ -1,7 +1,8 @@
 from auth import get_current_user
-from fastapi import FastAPI, HTTPException, Depends, status
+from fastapi import FastAPI, HTTPException, Depends, status, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import List, Optional
 import json
@@ -59,6 +60,15 @@ class Gateway:
         """Creates an API.
         param app: A FastAPI app.
         """
+
+        @app.get("/pictures/{product_id}")
+        async def get_pic(product_id: int):
+            product = self.inventory.get_product(product_id)
+            filename = product['picture']
+            try:
+                return FileResponse(f'picture/{filename}')
+            except FileNotFoundError:
+                raise HTTPException(status_code=404, detail="File not found")
 
 
         @app.post("/cart", response_model=List[int])

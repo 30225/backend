@@ -44,6 +44,15 @@ class Inventory:
             if existing_product['id'] == product['id']:
                 return "Product already exists."
 
+        picture = await product['picture'].read()
+
+        with open(f"pictures/{picture.filename}", "wb") as f:
+            f.write(picture_contents)
+
+        product['picture'] = picture.filename
+
+
+
         # check if product structure is valid
         if 'id' not in product or 'name' not in product or \
                 'price' not in product or 'quantity' not in product:
