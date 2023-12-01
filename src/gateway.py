@@ -224,7 +224,7 @@ class Gateway:
         @app.post('/products')
         def create_product(product: dict):
             """Creates a product."""
-            result = self.inventory.create_product(product)
+            result = await self.inventory.create_product(product)
             return {'message': result}
 
         @app.put('/products/{product_id}')
