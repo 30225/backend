@@ -12,7 +12,8 @@ class Inventory:
         "id": int,
         "name": string,
         "price": float,
-        "quantity": int
+        "quantity": int,
+        "url":  string
     }
     """
 
@@ -46,7 +47,7 @@ class Inventory:
 
         # check if product structure is valid
         if 'id' not in product or 'name' not in product or \
-                'price' not in product or 'quantity' not in product:
+                'price' not in product or 'quantity' not in product or 'url' not in product:
             return "Invalid product structure."
 
         self.inventory_data['products'].append(product)
