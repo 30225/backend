@@ -38,7 +38,7 @@ class Inventory:
                 return product
         return None
 
-    def create_product(self, product):
+    async def create_product(self, product):
         """Creates a product."""
         # check if product already exists
         for existing_product in self.inventory_data['products']:
