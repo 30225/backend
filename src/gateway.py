@@ -170,7 +170,7 @@ class Gateway:
             for user in users:
                 if user["username"] == user1["username"]:
                     if user["admin"] == "true":
-                        reutrn {"admin": "true"}
+                        return {"admin": "true"}
             
             return {"admin": "false"}
 
