@@ -12,8 +12,7 @@ class Inventory:
         "id": int,
         "name": string,
         "price": float,
-        "quantity": int,
-        "url":  string
+        "quantity": int
     }
     """
 
@@ -38,25 +37,17 @@ class Inventory:
                 return product
         return None
 
-    async def create_product(self, product):
+    def create_product(self, product):
         """Creates a product."""
         # check if product already exists
         for existing_product in self.inventory_data['products']:
             if existing_product['id'] == product['id']:
                 return "Product already exists."
 
-        picture = await product['picture'].read()
-
-        with open(f"pictures/{picture.filename}", "wb") as f:
-            f.write(picture_contents)
-
-        product['picture'] = picture.filename
-
-
 
         # check if product structure is valid
         if 'id' not in product or 'name' not in product or \
-                'price' not in product or 'quantity' not in product or 'url' not in product:
+                'price' not in product or 'quantity' not in product:
             return "Invalid product structure."
 
         self.inventory_data['products'].append(product)
